@@ -10,6 +10,9 @@ U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0);
 int pinDHT11Inside = 48;
 int pinDHT11Outside = 46;
 
+int humidityFicus = 550;
+
+
 SimpleDHT11 inside(pinDHT11Inside);
 SimpleDHT11 outside(pinDHT11Outside);
 
@@ -51,9 +54,11 @@ void hydricSensor(){
   moist=analogRead(A0);
   temp=analogRead(A2);
   Serial.println("Hydric sensor");
-  if(moist>1000){
+  if(moist>humidityFicus){
     Serial.println("upper");
     digitalWrite(pump,LOW);
+    delay(2000);
+    digitalWrite(pump,HIGH);
   }
   else{
     Serial.println("lower");
