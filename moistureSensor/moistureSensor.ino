@@ -11,7 +11,7 @@ int pinDHT11Inside = 48;
 int pinDHT11Outside = 46;
 
 int humidityFicus = 550;
-
+int delayTime = 10000;
 
 SimpleDHT11 inside(pinDHT11Inside);
 SimpleDHT11 outside(pinDHT11Outside);
@@ -48,7 +48,7 @@ void loop() {
   tempInside=getTemp(inside);
   tempOutside=getTemp(outside);
   display(tempInside.temp,tempOutside.temp,tempInside.humidity,tempOutside.humidity);
-  delay(2000);
+  delay(delayTime);
 }
 void hydricSensor(){
   moist=analogRead(A0);
