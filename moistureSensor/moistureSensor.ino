@@ -10,8 +10,8 @@ U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0);
 int pinDHT11Inside = 48;
 int pinDHT11Outside = 46;
 
-int humidityFicus = 550;
-int delayTime = 10000;
+int humidityFicus = 450;
+int delayTime = 30; //seconds
 
 SimpleDHT11 inside(pinDHT11Inside);
 SimpleDHT11 outside(pinDHT11Outside);
@@ -35,37 +35,35 @@ void setup() {
 
   pinMode(pump,OUTPUT);
 
-  digitalWrite(pump,LOW);
+  digitalWrite(pump,HIGH);
   digitalWrite(moistureOut,HIGH);
 
   u8g2.begin();
 }
-
 void loop() {
+  Serial.flush();
   u8g2.clearBuffer();					// clear the internal memory
   hydricSensor();
   sensor tempInside,tempOutside;
   tempInside=getTemp(inside);
   tempOutside=getTemp(outside);
   display(tempInside.temp,tempOutside.temp,tempInside.humidity,tempOutside.humidity);
-  delay(delayTime);
+  delay(delayTime*1000);
 }
+
+
 void hydricSensor(){
   moist=analogRead(A0);
   temp=analogRead(A2);
-  Serial.println("Hydric sensor");
   if(moist>humidityFicus){
-    Serial.println("upper");
     digitalWrite(pump,LOW);
     delay(2000);
     digitalWrite(pump,HIGH);
   }
   else{
-    Serial.println("lower");
     digitalWrite(pump,HIGH);
   }
   Serial.println(moist);
-  Serial.println("-------");
 }
 
 
@@ -81,12 +79,10 @@ sensor getTemp(SimpleDHT11 dht11){
     return error;
   }
 
-  Serial.print("Sample OK: ");
   Serial.print(temp.temp);
   Serial.print(" *C, ");
   Serial.print(temp.humidity);
   Serial.println(" RH%");
-  Serial.println("=================================");
 
   return temp;
 }
