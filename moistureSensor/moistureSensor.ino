@@ -10,7 +10,7 @@ U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0);
 int pinDHT11Inside = 48;
 int pinDHT11Outside = 46;
 
-int humidityFicus = 450;
+int humidityFicus = 300;
 int delayTime = 30; //seconds
 
 SimpleDHT11 inside(pinDHT11Inside);
@@ -22,6 +22,7 @@ int moist=0;
 int temp=0;
 float tension = 3.5;
 
+bool serialMonitorDisplay=false;
 
 struct sensor{
   float temp, humidity;
@@ -60,10 +61,9 @@ void hydricSensor(){
     delay(2000);
     digitalWrite(pump,HIGH);
   }
-  else{
-    digitalWrite(pump,HIGH);
+  if(serialMonitorDisplay){
+    Serial.println(moist);
   }
-  Serial.println(moist);
 }
 
 
@@ -74,16 +74,18 @@ sensor getTemp(SimpleDHT11 dht11){
   error.humidity=0;
   int err = SimpleDHTErrSuccess;
   if((err=dht11.read2(&temp.temp, &temp.humidity, NULL)) !=  SimpleDHTErrSuccess){
-    Serial.print("Read DHT11 failed, err=");
-    Serial.println(err);
+    if(serialMonitorDisplay){
+      Serial.print("Read DHT11 failed, err=");
+      Serial.println(err);
+    }
     return error;
   }
-
-  Serial.print(temp.temp);
-  Serial.print(" *C, ");
-  Serial.print(temp.humidity);
-  Serial.println(" RH%");
-
+  if(serialMonitorDisplay){
+    Serial.print(temp.temp);
+    Serial.print(" *C, ");
+    Serial.print(temp.humidity);
+    Serial.println(" RH%");
+  }
   return temp;
 }
 
@@ -97,7 +99,7 @@ void display(float tempIn, float tempOut, float humidityIn, float humidityOut){
   String floatIn = String(tempIn,0);
   String strIn = "☁️ "+floatIn+"°C";
   String floatOut = String(tempOut,0);
-  String strOut = "♥ "+floatOut+"°C";
+  String strOut = "□ "+floatOut+"°C";
   
   strIn.toCharArray(charTempIn,20);
   strOut.toCharArray(charTempOut,20);
