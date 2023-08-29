@@ -10,7 +10,7 @@ U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0);
 int pinDHT11Inside = 48;
 int pinDHT11Outside = 46;
 
-int humidityFicus = 300;
+int humidityFicus = 400;
 int delayTime = 30; //seconds
 
 SimpleDHT11 inside(pinDHT11Inside);
