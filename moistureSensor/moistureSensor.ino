@@ -4,35 +4,52 @@
 #include <SPI.h>
 #include <Wire.h>
 #include <stdio.h>
+#include <WiFiNINA.h>
+#include <ArduinoJson.h>
+
 
 U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0); 
 
-int pinDHT11Inside = 48;
-int pinDHT11Outside = 46;
+//-- PIN --//
+int pinDHT11Inside = 2; // pin inside temperature and humidity sensor
+int pinDHT11Outside = 3; // pin Outside temperature and humidity sensor
 
-int humidityFicus = 400;
+int humidityFicus = 400; // humidity level for the ficus
 int delayTime = 30; //seconds
 
-SimpleDHT11 inside(pinDHT11Inside);
-SimpleDHT11 outside(pinDHT11Outside);
+int moistureOut=4; // pin for the moisture sensor
+int pump=23; // pin for the pump
 
-int moistureOut=22;
-int pump=52;
 int moist=0;
 int temp=0;
 float tension = 3.5;
 
 bool serialMonitorDisplay=false;
 
-struct sensor{
-  float temp, humidity;
+SimpleDHT11 inside(pinDHT11Inside);
+SimpleDHT11 outside(pinDHT11Outside);
+
+//-- WIFI --//
+
+// Remplacez par vos informations de réseau
+const char* ssid = "votre_SSID";
+const char* password = "votre_mot_de_passe";
+
+// Définir le port du serveur
+WiFiServer server(80);
+
+
+// termic sensor struct
+struct Sensor {
+  float temperature;
+  float humidity;
 };
 
 void setup() {
   Serial.begin(9600);
 
-  pinMode(A0,INPUT);  
-  pinMode(A2,INPUT);  
+  pinMode(A2,INPUT);  //temperature sensor
+  pinMode(A3,INPUT);  //temperature sensor
 
   pinMode(pump,OUTPUT);
 
@@ -52,6 +69,19 @@ void loop() {
   delay(delayTime*1000);
 }
 
+void wifiConnection(){
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+  while (WiFi.begin(ssid, password) != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(".");
+  }
+  Serial.println("\nConnected to WiFi");
+
+  // Démarrer le serveur
+  server.begin();
+  Serial.println("Server started");
+}
 
 void hydricSensor(){
   moist=analogRead(A0);
@@ -89,6 +119,65 @@ sensor getTemp(SimpleDHT11 dht11){
   return temp;
 }
 
+void wifiHandler(){
+  // Vérifier les connexions entrantes
+  WiFiClient client = server.available();
+  if (client) {
+    Serial.println("New client");
+    String currentLine = "";
+    String termicNumberParam = "";
+
+    while (client.connected()) {
+      if (client.available()) {
+        char c = client.read();
+        Serial.write(c);
+        if (c == '\n') {
+          if (currentLine.length() == 0) {
+            // Fin de la requête HTTP, envoyer la réponse
+            if (termicNumberParam.length() > 0) {
+              // Créer un objet JSON
+              StaticJsonDocument<200> jsonDoc;
+              jsonDoc["termicNumber"] = sensor.termicNumber;
+              jsonDoc["temperature"] = sensor.temperature;
+              jsonDoc["humidity"] = sensor.humidity;
+
+              // Convertir l'objet JSON en chaîne
+              String jsonResponse;
+              serializeJson(jsonDoc, jsonResponse);
+
+              // Envoyer l'en-tête HTTP
+              client.println("HTTP/1.1 200 OK");
+              client.println("Content-Type: application/json");
+              client.println("Connection: close");
+              client.println();
+              client.println(jsonResponse);
+            } else {
+              // Envoyer une réponse d'erreur
+              client.println("HTTP/1.1 400 Bad Request");
+              client.println("Content-Type: text/plain");
+              client.println("Connection: close");
+              client.println();
+              client.println("Missing termicNumber parameter");
+            }
+            break;
+          } else {
+            // Vérifier si la ligne contient le paramètre termicNumber
+            if (currentLine.startsWith("GET /?termicNumber=")) {
+              int startIndex = currentLine.indexOf('=') + 1;
+              int endIndex = currentLine.indexOf(' ', startIndex);
+              termicNumberParam = currentLine.substring(startIndex, endIndex);
+            }
+            currentLine = "";
+          }
+        } else if (c != '\r') {
+          currentLine += c;
+        }
+      }
+    }
+    client.stop();
+    Serial.println("Client disconnected");
+  }
+}
 
 void display(float tempIn, float tempOut, float humidityIn, float humidityOut){
   u8g2.setFont(u8g2_font_unifont_t_symbols);//utf8
