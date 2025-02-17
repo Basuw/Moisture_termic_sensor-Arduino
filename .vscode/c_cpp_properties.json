@@ -10,6 +10,9 @@
             "includePath": [
                 "/Users/bastienjacquelin/Documents/Projects/Arduino/Moisture_termic_sensor-Arduino/include",
                 "/Users/bastienjacquelin/Documents/Projects/Arduino/Moisture_termic_sensor-Arduino/src",
+                "/Users/bastienjacquelin/Documents/Projects/Arduino/Moisture_termic_sensor-Arduino/lib/U8g2_Arduino-master/src",
+                "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
+                "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
                 "/Users/bastienjacquelin/Documents/Projects/Arduino/Moisture_termic_sensor-Arduino/.pio/libdeps/esp32dev/DHT sensor library",
                 "/Users/bastienjacquelin/Documents/Projects/Arduino/Moisture_termic_sensor-Arduino/.pio/libdeps/esp32dev/Adafruit Unified Sensor",
                 "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/newlib/platform_include",
@@ -230,7 +233,6 @@
                 "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/RainMaker/src",
                 "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/SD/src",
                 "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/SD_MMC/src",
-                "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
                 "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src",
                 "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/SimpleBLE/src",
                 "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/Ticker/src",
@@ -240,7 +242,6 @@
                 "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
                 "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                 "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
-                "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                 ""
             ],
             "browse": {
@@ -248,6 +249,9 @@
                 "path": [
                     "/Users/bastienjacquelin/Documents/Projects/Arduino/Moisture_termic_sensor-Arduino/include",
                     "/Users/bastienjacquelin/Documents/Projects/Arduino/Moisture_termic_sensor-Arduino/src",
+                    "/Users/bastienjacquelin/Documents/Projects/Arduino/Moisture_termic_sensor-Arduino/lib/U8g2_Arduino-master/src",
+                    "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
+                    "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
                     "/Users/bastienjacquelin/Documents/Projects/Arduino/Moisture_termic_sensor-Arduino/.pio/libdeps/esp32dev/DHT sensor library",
                     "/Users/bastienjacquelin/Documents/Projects/Arduino/Moisture_termic_sensor-Arduino/.pio/libdeps/esp32dev/Adafruit Unified Sensor",
                     "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/newlib/platform_include",
@@ -468,7 +472,6 @@
                     "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/RainMaker/src",
                     "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/SD/src",
                     "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/SD_MMC/src",
-                    "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
                     "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/SPIFFS/src",
                     "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/SimpleBLE/src",
                     "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/Ticker/src",
@@ -478,7 +481,6 @@
                     "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
                     "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                     "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
-                    "/Users/bastienjacquelin/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                     ""
                 ]
             },
