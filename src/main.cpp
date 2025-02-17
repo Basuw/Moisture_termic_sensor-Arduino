@@ -2,78 +2,93 @@
 #include <DHT.h>
 #include <DHT_U.h>
 
-#define DHTPIN 13     // Digital pin connected to the DHT sensor 
-// Feather HUZZAH ESP8266 note: use pins 3, 4, 5, 12, 13 or 14 --
-// Pin 15 can work but DHT must be disconnected during program upload.
+#define DHT_IN_PIN 13
+#define DHT_OUT_PIN 12
 
-// Uncomment the type of sensor in use:
-#define DHTTYPE    DHT11     // DHT 11// Feather HUZZAH ESP8266 note: use pins 3, 4, 5, 12, 13 or 14 --
-// Pin 15 can work but DHT must be disconnected during program upload.
+#define SOIL_MOISTURE_PIN 34
+#define PUMP_PIN 32
+#define HUMIDITY_THRESHOLD 35
 
-// Uncomment the type of sensor in use:
+#define DHTTYPE DHT11     // Sensor type
+
 #define LED 2
 
-DHT_Unified dht(DHTPIN, DHTTYPE);
+DHT_Unified dhtIn(DHT_IN_PIN, DHTTYPE);
 
 uint32_t delayMS;
 
 void setup() {
   Serial.begin(9600);
+  //PIN CONFIGURATION
   pinMode(LED, OUTPUT);
+  pinMode(SOIL_MOISTURE_PIN, INPUT);
+  pinMode(PUMP_PIN, OUTPUT);
 
-  // Initialize device.
-  dht.begin();
-  Serial.println(F("DHTxx Unified Sensor Example"));
-  // Print temperature sensor details.
-  sensor_t sensor;
-  dht.temperature().getSensor(&sensor);
-  Serial.println(F("------------------------------------"));
-  Serial.println(F("Temperature Sensor"));
-  Serial.print  (F("Sensor Type: ")); Serial.println(sensor.name);
-  Serial.print  (F("Driver Ver:  ")); Serial.println(sensor.version);
-  Serial.print  (F("Unique ID:   ")); Serial.println(sensor.sensor_id);
-  Serial.print  (F("Max Value:   ")); Serial.print(sensor.max_value); Serial.println(F("°C"));
-  Serial.print  (F("Min Value:   ")); Serial.print(sensor.min_value); Serial.println(F("°C"));
-  Serial.print  (F("Resolution:  ")); Serial.print(sensor.resolution); Serial.println(F("°C"));
-  Serial.println(F("------------------------------------"));
-  // Print humidity sensor details.
-  dht.humidity().getSensor(&sensor);
-  Serial.println(F("Humidity Sensor"));
-  Serial.print  (F("Sensor Type: ")); Serial.println(sensor.name);
-  Serial.print  (F("Driver Ver:  ")); Serial.println(sensor.version);
-  Serial.print  (F("Unique ID:   ")); Serial.println(sensor.sensor_id);
-  Serial.print  (F("Max Value:   ")); Serial.print(sensor.max_value); Serial.println(F("%"));
-  Serial.print  (F("Min Value:   ")); Serial.print(sensor.min_value); Serial.println(F("%"));
-  Serial.print  (F("Resolution:  ")); Serial.print(sensor.resolution); Serial.println(F("%"));
-  Serial.println(F("------------------------------------"));
-  // Set delay between sensor readings based on sensor details.
-  delayMS = sensor.min_delay / 1000;
+  dhtIn.begin();
 }
+
+
+
+void displayTempAndHumidity(String name, float temperature, float humidity) {
+  Serial.print(name);
+  Serial.print(" : ");
+  Serial.print(temperature);
+  Serial.print("°C, ");
+  Serial.print(humidity);
+  Serial.println("%");
+
+}
+
+void tempAndHumidty(DHT_Unified dht, String name) {
+  sensors_event_t event;
+  dht.temperature().getEvent(&event);
+  float temp, hum;
+  if (isnan(event.temperature)) {
+    Serial.print(F("Error reading temperature from "));
+    Serial.println(name);
+    return;
+  }
+  temp = event.temperature;
+  dht.humidity().getEvent(&event);
+  if (isnan(event.relative_humidity)) {
+    Serial.print(F("Error reading humidity from"));
+    Serial.println(name);
+    return;
+  }
+  hum = event.relative_humidity;
+  displayTempAndHumidity(name, temp, hum);
+}
+
+
+int soilHumidity() {
+  int sensorValue = analogRead(SOIL_MOISTURE_PIN);
+  float moisturePercent = map(sensorValue, 4095, 0, 0, 100);
+
+  Serial.print("Soil humidity : ");
+  Serial.print(moisturePercent);
+  Serial.println(" %");
+
+  return moisturePercent;
+}
+
+void pump(int humPercent){
+  if(humPercent < HUMIDITY_THRESHOLD) {
+    digitalWrite(LED, HIGH);
+    digitalWrite(PUMP_PIN, LOW);
+    delay(1000);
+    digitalWrite(LED, LOW);
+    digitalWrite(PUMP_PIN, HIGH);
+  }
+}
+
 
 void loop() {
 	digitalWrite(LED, LOW);
 	delay(500);
   // Get temperature event and print its value.
-  sensors_event_t event;
-  dht.temperature().getEvent(&event);
-  if (isnan(event.temperature)) {
-    Serial.println(F("Error reading temperature!"));
-  }
-  else {
-    Serial.print(F("Temperature: "));
-    Serial.print(event.temperature);
-    Serial.println(F("°C"));
-  }
-  // Get humidity event and print its value.
-  dht.humidity().getEvent(&event);
-  if (isnan(event.relative_humidity)) {
-    Serial.println(F("Error reading humidity!"));
-  }
-  else {
-    Serial.print(F("Humidity: "));
-    Serial.print(event.relative_humidity);
-    Serial.println(F("%"));
-  }
-	digitalWrite(LED, HIGH);
+  digitalWrite(PUMP_PIN, HIGH);
+  tempAndHumidty(dhtIn, "Indoor");
+  int humPercent = soilHumidity();
+  pump(humPercent);
 	delay(500);
 }
