@@ -10,9 +10,13 @@
             "includePath": [
                 "F:/Projet/Perso/Moisture_termic_sensor-Arduino/include",
                 "F:/Projet/Perso/Moisture_termic_sensor-Arduino/src",
+                "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
                 "F:/Projet/Perso/Moisture_termic_sensor-Arduino/lib/U8g2_Arduino-master/src",
                 "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                 "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
+                "F:/Projet/Perso/Moisture_termic_sensor-Arduino/lib/WiFiConfig",
+                "F:/Projet/Perso/Moisture_termic_sensor-Arduino/lib/MQTTConfig",
+                "F:/Projet/Perso/Moisture_termic_sensor-Arduino/.pio/libdeps/esp32dev/PubSubClient/src",
                 "F:/Projet/Perso/Moisture_termic_sensor-Arduino/.pio/libdeps/esp32dev/DHT sensor library",
                 "F:/Projet/Perso/Moisture_termic_sensor-Arduino/.pio/libdeps/esp32dev/Adafruit Unified Sensor",
                 "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/newlib/platform_include",
@@ -239,7 +243,6 @@
                 "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/USB/src",
                 "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/Update/src",
                 "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/WebServer/src",
-                "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
                 "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                 "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
                 ""
@@ -249,9 +252,13 @@
                 "path": [
                     "F:/Projet/Perso/Moisture_termic_sensor-Arduino/include",
                     "F:/Projet/Perso/Moisture_termic_sensor-Arduino/src",
+                    "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
                     "F:/Projet/Perso/Moisture_termic_sensor-Arduino/lib/U8g2_Arduino-master/src",
                     "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/Wire/src",
                     "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/SPI/src",
+                    "F:/Projet/Perso/Moisture_termic_sensor-Arduino/lib/WiFiConfig",
+                    "F:/Projet/Perso/Moisture_termic_sensor-Arduino/lib/MQTTConfig",
+                    "F:/Projet/Perso/Moisture_termic_sensor-Arduino/.pio/libdeps/esp32dev/PubSubClient/src",
                     "F:/Projet/Perso/Moisture_termic_sensor-Arduino/.pio/libdeps/esp32dev/DHT sensor library",
                     "F:/Projet/Perso/Moisture_termic_sensor-Arduino/.pio/libdeps/esp32dev/Adafruit Unified Sensor",
                     "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/newlib/platform_include",
@@ -478,7 +485,6 @@
                     "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/USB/src",
                     "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/Update/src",
                     "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/WebServer/src",
-                    "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/WiFi/src",
                     "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/WiFiClientSecure/src",
                     "C:/Users/basti/.platformio/packages/framework-arduinoespressif32/libraries/WiFiProv/src",
                     ""
