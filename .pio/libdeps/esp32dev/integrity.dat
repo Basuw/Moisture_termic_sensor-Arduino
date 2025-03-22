@@ -1,2 +1,3 @@
-knolleary/PubSubClient@^2.8
 adafruit/DHT sensor library@^1.4.6
+knolleary/PubSubClient@^2.8
+adafruit/Adafruit NeoPixel@^1.12.5

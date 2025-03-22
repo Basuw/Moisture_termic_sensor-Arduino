@@ -1,5 +1,6 @@
 #include "temp/thermalAndHumidity.h"
 #include "display/display.h"
+#include "leds/leds.h"
 
 #define PUMP_PIN 32
 #define HUMIDITY_THRESHOLD 35
@@ -8,7 +9,6 @@
 #define I2C_2_PIN 21
 
 #define PRINT_MONITOR true
-
 #define LED 2
 
 uint32_t delayMS;
@@ -28,6 +28,8 @@ void setup() {
   dhtIn.begin();
   u8g2.begin();
   u8g2.enableUTF8Print();  // Pour utiliser les caractères UTF-8
+
+  setupLED(); // Initialize the WS2812B8 LED
 }
 
 void pump(int humPercent){
@@ -52,5 +54,9 @@ void loop() {
   displayScreen(u8g2,indoor, outdoor);
   int humPercent = soilHumidity();
   pump(humPercent);
+
+  // Set LED color and intensity
+  setLEDColor(255, 0, 0, 50); // Example: Red color with 50% brightness
+
   delay(500);
 }
