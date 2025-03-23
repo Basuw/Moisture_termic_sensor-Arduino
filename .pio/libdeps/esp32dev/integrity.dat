@@ -1,3 +1,4 @@
-adafruit/DHT sensor library@^1.4.6
 knolleary/PubSubClient@^2.8
+adafruit/DHT sensor library@^1.4.6
 adafruit/Adafruit NeoPixel@^1.12.5
+monstrenyatko/ArduinoMqtt@^1.6.0

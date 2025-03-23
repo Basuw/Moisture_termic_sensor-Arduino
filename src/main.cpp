@@ -1,6 +1,7 @@
 #include "temp/thermalAndHumidity.h"
 #include "display/display.h"
 #include "leds/leds.h"
+#include "broker/broker.h"  // Include the broker header file
 
 #define PUMP_PIN 32
 #define HUMIDITY_THRESHOLD 35
@@ -12,6 +13,8 @@
 #define LED 2
 
 uint32_t delayMS;
+unsigned long lastPublishTime = 0;  // Add a variable to track the last publish time
+const unsigned long publishInterval = 60000;  // 1 minute interval
 
 DHT_Unified dhtIn(DHT_IN_PIN, DHTTYPE);
 DHT_Unified dhtOut(DHT_OUT_PIN, DHTTYPE);
@@ -30,6 +33,7 @@ void setup() {
   u8g2.enableUTF8Print();  // Pour utiliser les caractères UTF-8
 
   setupLED(); // Initialize the WS2812B8 LED
+  setupMQTT(); // Initialize MQTT
 }
 
 void pump(int humPercent){
@@ -57,6 +61,14 @@ void loop() {
 
   // Set LED color and intensity
   setLEDColor(255, 0, 0, 50); // Example: Red color with 50% brightness
+
+  unsigned long currentTime = millis();
+  if (currentTime - lastPublishTime >= publishInterval) {
+    publishSensorData(indoor, outdoor); // Publish sensor data to MQTT topic
+    lastPublishTime = currentTime;  // Update the last publish time
+  }
+
+  loopMQTT(); // Handle MQTT loop
 
   delay(500);
 }
