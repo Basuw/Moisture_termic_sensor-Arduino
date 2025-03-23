@@ -23,13 +23,17 @@ void callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void setup_wifi() {
-  delay(10);
+  unsigned long startAttemptTime = millis();
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED && millis() - startAttemptTime < 10000) {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("WiFi connected");
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("WiFi connected");
+  } else {
+    Serial.println("WiFi connection failed");
+  }
 }
 
 void reconnect() {
@@ -42,7 +46,10 @@ void reconnect() {
       Serial.print("failed, rc=");
       Serial.print(client.state());
       Serial.println(" try again in 5 seconds");
-      delay(5000);
+      unsigned long retryStartTime = millis();
+      while (millis() - retryStartTime < 5000) {
+        // Wait for 5 seconds before retrying
+      }
     }
   }
 }

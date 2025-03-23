@@ -16,6 +16,12 @@ uint32_t delayMS;
 unsigned long lastPublishTime = 0;  // Add a variable to track the last publish time
 const unsigned long publishInterval = 60000;  // 1 minute interval
 
+unsigned long lastLoopTime = 0;  // Add a variable to track the last loop time
+const unsigned long loopInterval = 500;  // 500 ms interval
+
+unsigned long pumpStartTime = 0;  // Add a variable to track the pump start time
+const unsigned long pumpDuration = 1000;  // 1 second duration
+
 DHT_Unified dhtIn(DHT_IN_PIN, DHTTYPE);
 DHT_Unified dhtOut(DHT_OUT_PIN, DHTTYPE);
 
@@ -40,35 +46,37 @@ void pump(int humPercent){
   if(humPercent < HUMIDITY_THRESHOLD) {
     digitalWrite(LED, HIGH);
     digitalWrite(PUMP_PIN, LOW);
-    delay(1000);
-    digitalWrite(LED, LOW);
-    digitalWrite(PUMP_PIN, HIGH);
+    pumpStartTime = millis();
   }
 }
 
 void loop() {
-  digitalWrite(LED, LOW);
-  delay(500);
-  // Get temperature event and print its value.
-  digitalWrite(PUMP_PIN, HIGH);
-  sensor indoor = getTempAndHumidity(dhtIn, "Indoor");
-  displayTempAndHumidity(PRINT_MONITOR,indoor);
-  sensor outdoor = getTempAndHumidity(dhtOut, "Outdoor");
-  displayTempAndHumidity(PRINT_MONITOR,outdoor);
-  displayScreen(u8g2,indoor, outdoor);
-  int humPercent = soilHumidity();
-  pump(humPercent);
-
-  // Set LED color and intensity
-  setLEDColor(255, 0, 0, 50); // Example: Red color with 50% brightness
-
   unsigned long currentTime = millis();
-  if (currentTime - lastPublishTime >= publishInterval) {
-    publishSensorData(indoor, outdoor); // Publish sensor data to MQTT topic
-    lastPublishTime = currentTime;  // Update the last publish time
+
+  if (currentTime - lastLoopTime >= loopInterval) {
+    lastLoopTime = currentTime;
+
+    digitalWrite(LED, LOW);
+    // Get temperature event and print its value.
+    digitalWrite(PUMP_PIN, HIGH);
+    sensor indoor = getTempAndHumidity(dhtIn, "Indoor");
+    displayTempAndHumidity(PRINT_MONITOR,indoor);
+    sensor outdoor = getTempAndHumidity(dhtOut, "Outdoor");
+    displayTempAndHumidity(PRINT_MONITOR,outdoor);
+    displayScreen(u8g2,indoor, outdoor);
+    int humPercent = soilHumidity();
+    pump(humPercent);
+
+    if (currentTime - lastPublishTime >= publishInterval) {
+      publishSensorData(indoor, outdoor); // Publish sensor data to MQTT topic
+      lastPublishTime = currentTime;  // Update the last publish time
+    }
+
+    loopMQTT(); // Handle MQTT loop
   }
 
-  loopMQTT(); // Handle MQTT loop
-
-  delay(500);
+  if (digitalRead(PUMP_PIN) == LOW && currentTime - pumpStartTime >= pumpDuration) {
+    digitalWrite(LED, LOW);
+    digitalWrite(PUMP_PIN, HIGH);
+  }
 }
